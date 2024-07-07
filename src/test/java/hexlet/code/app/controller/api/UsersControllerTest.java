@@ -3,6 +3,8 @@ package hexlet.code.app.controller.api;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -20,6 +22,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -29,9 +32,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.app.model.User;
 import hexlet.code.app.repository.UserRepository;
 import hexlet.code.app.util.ModelGenerator;
+import jakarta.transaction.Transactional;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 public class UsersControllerTest {
 
     @Autowired
@@ -52,22 +57,24 @@ public class UsersControllerTest {
     @Autowired
     private PasswordEncoder encoder;
 
+    private JwtRequestPostProcessor token;
     private User user;
 
     @BeforeEach
     public void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac)
             .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
+            .apply(springSecurity())
             .build();
 
-        user = Instancio.of(modelGenerator.getUserModel())
-            .create();
+        user = Instancio.of(modelGenerator.getUserModel()).create();
+        token = jwt().jwt(builder -> builder.subject(user.getEmail()));
     }
 
     @Test
     public void testIndex() throws Exception {
         userRepository.save(user);
-        var request = get("/api/users");
+        var request = get("/api/users").with(token);
 
         var result = mockMvc.perform(request)
             .andExpect(status().isOk())
@@ -87,7 +94,7 @@ public class UsersControllerTest {
     @Test
     public void testShow() throws Exception {
         userRepository.save(user);
-        var request = get("/api/users/" + user.getId());
+        var request = get("/api/users/" + user.getId()).with(token);
 
         var result = mockMvc.perform(request)
             .andExpect(status().isOk())
@@ -115,7 +122,8 @@ public class UsersControllerTest {
 
         var request = post("/api/users")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(om.writeValueAsString(data));
+            .content(om.writeValueAsString(data))
+            .with(token);
 
         var result = mockMvc.perform(request)
             .andExpect(status().isCreated())
@@ -147,7 +155,8 @@ public class UsersControllerTest {
 
         var request = post("/api/users")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(om.writeValueAsString(data));
+            .content(om.writeValueAsString(data))
+            .with(token);
 
         mockMvc.perform(request)
             .andExpect(status().isBadRequest());
@@ -169,7 +178,8 @@ public class UsersControllerTest {
 
         var request = put("/api/users/" + user.getId())
             .contentType(MediaType.APPLICATION_JSON)
-            .content(om.writeValueAsString(data));
+            .content(om.writeValueAsString(data))
+            .with(token);
 
         var result = mockMvc.perform(request)
             .andExpect(status().isOk())
@@ -203,7 +213,8 @@ public class UsersControllerTest {
 
         var request = put("/api/users/" + user.getId())
             .contentType(MediaType.APPLICATION_JSON)
-            .content(om.writeValueAsString(data));
+            .content(om.writeValueAsString(data))
+            .with(token);
 
         mockMvc.perform(request)
             .andExpect(status().isBadRequest());
@@ -219,7 +230,8 @@ public class UsersControllerTest {
 
         var request = put("/api/users/" + user.getId())
             .contentType(MediaType.APPLICATION_JSON)
-            .content(om.writeValueAsString(data));
+            .content(om.writeValueAsString(data))
+            .with(token);
 
         mockMvc.perform(request)
             .andExpect(status().isOk());
@@ -233,13 +245,51 @@ public class UsersControllerTest {
     }
 
     @Test
+    public void testUpdateOtherUser() throws Exception {
+        var otherUser = Instancio.of(modelGenerator.getUserModel()).create();
+        userRepository.save(otherUser);
+        userRepository.save(user);
+
+        var data = Map.of(
+            "email", "jack@google.com",
+            "firstName", "Jack",
+            "lastName", "Jons",
+            "password", "some-password"
+        );
+
+        var request = put("/api/users/" + otherUser.getId())
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(om.writeValueAsString(data))
+            .with(token);
+
+        mockMvc.perform(request)
+            .andExpect(status().isForbidden());
+
+            var updatedOtherUser = userRepository.findById(otherUser.getId()).get();
+            assertThat(otherUser.getEmail()).isEqualTo(updatedOtherUser.getEmail());
+    }
+
+    @Test
     public void testDestroy() throws Exception {
         userRepository.save(user);
-        var request = delete("/api/users/" + user.getId());
+        var request = delete("/api/users/" + user.getId()).with(token);
 
         mockMvc.perform(request)
             .andExpect(status().isNoContent());
 
         assertThat(userRepository.existsById(user.getId())).isFalse();
+    }
+
+    @Test
+    public void testDestroyOtherUser() throws Exception {
+        var otherUser = Instancio.of(modelGenerator.getUserModel()).create();
+        userRepository.save(otherUser);
+        userRepository.save(user);
+        var request = delete("/api/users/" + otherUser.getId()).with(token);
+
+        mockMvc.perform(request)
+            .andExpect(status().isForbidden());
+
+        assertThat(userRepository.existsById(otherUser.getId())).isTrue();
     }
 }

@@ -48,6 +48,7 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+    systemProperty("spring.profiles.active", "test")
     testLogging {
         exceptionFormat = TestExceptionFormat.FULL
         events = mutableSetOf(TestLogEvent.FAILED, TestLogEvent.PASSED, TestLogEvent.SKIPPED)

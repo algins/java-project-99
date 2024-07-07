@@ -1,7 +1,7 @@
 ---
 spring:
   datasource:
-    url: dbc:h2:mem:project;DB_CLOSE_DELAY=-1;
+    url: jdbc:h2:mem:project;DB_CLOSE_DELAY=-1;
     driver-class-name: org.h2.Driver
   h2:
     console:
