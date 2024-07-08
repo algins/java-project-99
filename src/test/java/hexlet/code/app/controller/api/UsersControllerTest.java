@@ -87,7 +87,7 @@ public class UsersControllerTest {
             v.node("[0].email").isEqualTo(user.getEmail());
             v.node("[0].firstName").isEqualTo(user.getFirstName());
             v.node("[0].lastName").isEqualTo(user.getLastName());
-            v.node("[0].createdAt").isEqualTo(user.getCreatedAt());
+            v.node("[0].createdAt").isEqualTo(user.getCreatedAt().toString());
         });
     }
 
@@ -107,7 +107,7 @@ public class UsersControllerTest {
             v.node("email").isEqualTo(user.getEmail());
             v.node("firstName").isEqualTo(user.getFirstName());
             v.node("lastName").isEqualTo(user.getLastName());
-            v.node("createdAt").isEqualTo(user.getCreatedAt());
+            v.node("createdAt").isEqualTo(user.getCreatedAt().toString());
         });
     }
 
@@ -143,7 +143,7 @@ public class UsersControllerTest {
             v.node("email").isEqualTo(createdUser.getEmail());
             v.node("firstName").isEqualTo(createdUser.getFirstName());
             v.node("lastName").isEqualTo(createdUser.getLastName());
-            v.node("createdAt").isEqualTo(createdUser.getCreatedAt());
+            v.node("createdAt").isEqualTo(createdUser.getCreatedAt().toString());
         });
     }
 
@@ -199,7 +199,7 @@ public class UsersControllerTest {
             v.node("email").isEqualTo(updatedUser.getEmail());
             v.node("firstName").isEqualTo(updatedUser.getFirstName());
             v.node("lastName").isEqualTo(updatedUser.getLastName());
-            v.node("createdAt").isEqualTo(updatedUser.getCreatedAt());
+            v.node("createdAt").isEqualTo(updatedUser.getCreatedAt().toString());
         });
     }
 
