@@ -5,6 +5,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -17,6 +18,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -50,6 +52,9 @@ public class User implements UserDetails, BaseEntity {
 
     @LastModifiedDate
     private LocalDate updatedAt;
+
+    @OneToMany(mappedBy = "assignee")
+    private List<Task> tasks = new ArrayList<>();
 
     @Override
     public String getPassword() {
