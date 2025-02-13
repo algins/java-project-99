@@ -1,5 +1,8 @@
 package hexlet.code.app.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.instancio.Instancio;
 import org.instancio.Model;
 import org.instancio.Select;
@@ -7,9 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import hexlet.code.app.model.Label;
 import hexlet.code.app.model.Task;
 import hexlet.code.app.model.TaskStatus;
 import hexlet.code.app.model.User;
+import hexlet.code.app.repository.LabelRepository;
 import hexlet.code.app.repository.TaskStatusRepository;
 import hexlet.code.app.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
@@ -19,6 +24,7 @@ import net.datafaker.Faker;
 @Getter
 @Component
 public class ModelGenerator {
+    private Model<Label> labelModel;
     private Model<Task> taskModel;
     private Model<TaskStatus> taskStatusModel;
     private Model<User> userModel;
@@ -28,6 +34,9 @@ public class ModelGenerator {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private LabelRepository labelRepository;
 
     @Autowired
     private TaskStatusRepository taskStatusRepository;
@@ -56,6 +65,12 @@ public class ModelGenerator {
             })
             .toModel();
 
+        labelModel = Instancio.of(Label.class)
+            .ignore(Select.field(Label::getId))
+            .ignore(Select.field(Label::getTasks))
+            .supply(Select.field(Label::getName), () -> faker.lorem().sentence())
+            .toModel();
+
         taskModel = Instancio.of(Task.class)
             .ignore(Select.field(Task::getId))
             .supply(Select.field(Task::getAssignee), () -> {
@@ -70,6 +85,11 @@ public class ModelGenerator {
                 var taskStatus = Instancio.of(getTaskStatusModel()).create();
                 taskStatusRepository.save(taskStatus);
                 return taskStatus;
+            })
+            .supply(Select.field(Task::getLabels), () -> {
+                var label = Instancio.of(getLabelModel()).create();
+                labelRepository.save(label);
+                return new ArrayList<>(List.of(label));
             })
             .toModel();
     }

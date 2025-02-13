@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
 
 import org.instancio.Instancio;
@@ -28,8 +29,10 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import hexlet.code.app.model.Label;
 import hexlet.code.app.model.Task;
 import hexlet.code.app.model.User;
+import hexlet.code.app.repository.LabelRepository;
 import hexlet.code.app.repository.TaskRepository;
 import hexlet.code.app.repository.TaskStatusRepository;
 import hexlet.code.app.repository.UserRepository;
@@ -52,6 +55,9 @@ public class TasksControllerTest {
 
     @Autowired
     private ModelGenerator modelGenerator;
+
+    @Autowired
+    private LabelRepository labelRepository;
 
     @Autowired
     private TaskRepository taskRepository;
@@ -97,6 +103,7 @@ public class TasksControllerTest {
             v.node("[0].title").isEqualTo(task.getName());
             v.node("[0].content").isEqualTo(task.getDescription());
             v.node("[0].status").isEqualTo(task.getTaskStatus().getSlug());
+            v.node("[0].labelIds").isEqualTo(task.getLabels().stream().map(Label::getId).toList());
         });
     }
 
@@ -119,6 +126,7 @@ public class TasksControllerTest {
             v.node("title").isEqualTo(task.getName());
             v.node("content").isEqualTo(task.getDescription());
             v.node("status").isEqualTo(task.getTaskStatus().getSlug());
+            v.node("labelIds").isEqualTo(task.getLabels().stream().map(Label::getId).toList());
         });
     }
 
@@ -129,7 +137,8 @@ public class TasksControllerTest {
             "assignee_id", task.getAssignee().getId(),
             "title", task.getName(),
             "content", task.getDescription(),
-            "status", task.getTaskStatus().getSlug()
+            "status", task.getTaskStatus().getSlug(),
+            "labelIds", task.getLabels().stream().map(Label::getId).toList()
         );
 
         var request = post("/api/tasks")
@@ -148,6 +157,7 @@ public class TasksControllerTest {
         assertThat(data.get("title")).isEqualTo(createdTask.getName());
         assertThat(data.get("content")).isEqualTo(createdTask.getDescription());
         assertThat(data.get("status")).isEqualTo(createdTask.getTaskStatus().getSlug());
+        assertThat(data.get("labelIds")).isEqualTo(createdTask.getLabels().stream().map(Label::getId).toList());
 
         var body = result.getResponse().getContentAsString();
 
@@ -159,6 +169,7 @@ public class TasksControllerTest {
             v.node("title").isEqualTo(createdTask.getName());
             v.node("content").isEqualTo(createdTask.getDescription());
             v.node("status").isEqualTo(createdTask.getTaskStatus().getSlug());
+            v.node("labelIds").isEqualTo(createdTask.getLabels().stream().map(Label::getId).toList());
         });
     }
 
@@ -188,13 +199,16 @@ public class TasksControllerTest {
         userRepository.save(newAssignee);
         var newTaskStatus = Instancio.of(modelGenerator.getTaskStatusModel()).create();
         taskStatusRepository.save(newTaskStatus);
+        var newLabel = Instancio.of(modelGenerator.getLabelModel()).create();
+        labelRepository.save(newLabel);
 
         var data = Map.of(
             "index", 12,
             "assignee_id", newAssignee.getId(),
             "title", "Test title",
             "content", "Test content",
-            "status", newTaskStatus.getSlug()
+            "status", newTaskStatus.getSlug(),
+            "labelIds", List.of(newLabel.getId())
         );
 
         var request = put("/api/tasks/" + task.getId())
@@ -213,6 +227,7 @@ public class TasksControllerTest {
         assertThat(data.get("title")).isEqualTo(updatedTask.getName());
         assertThat(data.get("content")).isEqualTo(updatedTask.getDescription());
         assertThat(data.get("status")).isEqualTo(updatedTask.getTaskStatus().getSlug());
+        assertThat(data.get("labelIds")).isEqualTo(updatedTask.getLabels().stream().map(Label::getId).toList());
 
         var body = result.getResponse().getContentAsString();
 
@@ -224,6 +239,7 @@ public class TasksControllerTest {
             v.node("title").isEqualTo(updatedTask.getName());
             v.node("content").isEqualTo(updatedTask.getDescription());
             v.node("status").isEqualTo(updatedTask.getTaskStatus().getSlug());
+            v.node("labelIds").isEqualTo(updatedTask.getLabels().stream().map(Label::getId).toList());
         });
     }
 

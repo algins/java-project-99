@@ -1,5 +1,7 @@
 package hexlet.code.app.dto;
 
+import java.util.List;
+
 import org.openapitools.jackson.nullable.JsonNullable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -26,4 +28,6 @@ public class TaskUpdateDTO {
 
     @NotNull
     private JsonNullable<String> status;
+
+    private List<Long> labelIds;
 }

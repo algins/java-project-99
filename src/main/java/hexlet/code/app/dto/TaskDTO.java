@@ -1,6 +1,7 @@
 package hexlet.code.app.dto;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,4 +28,5 @@ public class TaskDTO {
     private String description;
 
     private String status;
+    private List<Long> labelIds;
 }

@@ -1,5 +1,7 @@
 package hexlet.code.app.mapper;
 
+import java.util.List;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
@@ -13,8 +15,10 @@ import hexlet.code.app.dto.TaskCreateDTO;
 import hexlet.code.app.dto.TaskDTO;
 import hexlet.code.app.dto.TaskUpdateDTO;
 import hexlet.code.app.exception.ResourceNotFoundException;
+import hexlet.code.app.model.Label;
 import hexlet.code.app.model.Task;
 import hexlet.code.app.model.TaskStatus;
+import hexlet.code.app.repository.LabelRepository;
 import hexlet.code.app.repository.TaskStatusRepository;
 
 @Mapper(
@@ -28,21 +32,42 @@ public abstract class TaskMapper {
     @Autowired
     private TaskStatusRepository taskStatusRepository;
 
+    @Autowired
+    private LabelRepository labelRepository;
+
     @Mapping(source = "assigneeId", target = "assignee")
     @Mapping(source = "status", target = "taskStatus", qualifiedByName = "slugToTaskStatus")
+    @Mapping(source = "labelIds", target = "labels", qualifiedByName = "labelIdsToLabels")
     public abstract Task map(TaskCreateDTO dto);
 
     @Mapping(source = "assignee.id", target = "assigneeId")
     @Mapping(source = "taskStatus.slug", target = "status")
+    @Mapping(source = "labels", target = "labelIds", qualifiedByName = "labelsToLabelIds")
     public abstract TaskDTO map(Task model);
 
     @Mapping(source = "assigneeId", target = "assignee.id")
     @Mapping(source = "status", target = "taskStatus.slug")
+    @Mapping(source = "labelIds", target = "labels", qualifiedByName = "labelIdsToLabels")
     public abstract void update(TaskUpdateDTO dto, @MappingTarget Task model);
 
     @Named("slugToTaskStatus")
     public TaskStatus slugToTaskStatus(String slug) {
         return taskStatusRepository.findBySlug(slug)
             .orElseThrow(() -> new ResourceNotFoundException("Not Found: " + slug));
+    }
+
+    @Named("labelIdsToLabels")
+    public List<Label> labelIdsToLabels(List<Long> labelIds) {
+        return labelIds.stream()
+            .map(id -> labelRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Not found: " + id)))
+            .toList();
+    }
+
+    @Named("labelsToLabelIds")
+    public List<Long> labelsToLabelIds(List<Label> labels) {
+        return labels.stream()
+            .map(Label::getId)
+            .toList();
     }
 }

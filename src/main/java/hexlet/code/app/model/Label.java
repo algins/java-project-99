@@ -9,15 +9,15 @@ import java.util.List;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,40 +25,21 @@ import lombok.Setter;
 @Getter
 @Setter
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "tasks")
-public class Task implements BaseEntity {
+@Table(name = "labels")
+public class Label implements BaseEntity {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    private Integer index;
-
-    @ManyToOne
-    private User assignee;
-
+    @Size(min = 3, max = 1000)
     @NotBlank
+    @Column(unique = true)
     private String name;
 
-    private String description;
-
-    @NotNull
-    @ManyToOne
-    private TaskStatus taskStatus;
-
     @ManyToMany
-    private List<Label> labels = new ArrayList<>();
+    private List<Task> tasks = new ArrayList<>();
 
     @CreatedDate
     private LocalDate createdAt;
-
-    public void addLabel(Label label) {
-        labels.add(label);
-        label.getTasks().add(this);
-    }
-
-    public void removeLabel(Label label) {
-        labels.remove(label);
-        label.getTasks().remove(this);
-    }
 }

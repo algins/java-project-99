@@ -1,5 +1,6 @@
 package hexlet.code.app.component;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.boot.ApplicationArguments;
@@ -7,8 +8,10 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import hexlet.code.app.dto.LabelCreateDTO;
 import hexlet.code.app.dto.TaskStatusCreateDTO;
 import hexlet.code.app.dto.UserCreateDTO;
+import hexlet.code.app.service.LabelService;
 import hexlet.code.app.service.TaskStatusService;
 import hexlet.code.app.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class DataInitializer implements ApplicationRunner {
 
+    private final LabelService labelService;
     private final TaskStatusService taskStatusService;
     private final UserService userService;
 
@@ -25,6 +29,7 @@ public class DataInitializer implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         initializeDefaultUser();
         initializeTaskStatuses();
+        initializeLabels();
     }
 
     private void initializeDefaultUser() {
@@ -48,6 +53,19 @@ public class DataInitializer implements ApplicationRunner {
             taskStatusData.setName(name);
             taskStatusData.setSlug(slug);
             taskStatusService.create(taskStatusData);
+        });
+    }
+
+    private void initializeLabels() {
+        List<String> labels = List.of(
+            "bug",
+            "feature"
+        );
+
+        labels.forEach(name -> {
+            LabelCreateDTO labelData = new LabelCreateDTO();
+            labelData.setName(name);
+            labelService.create(labelData);
         });
     }
 }
