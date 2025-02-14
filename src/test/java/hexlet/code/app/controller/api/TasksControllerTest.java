@@ -108,6 +108,39 @@ public class TasksControllerTest {
     }
 
     @Test
+    public void testIndexWithFilters() throws Exception {
+        taskRepository.save(task);
+        var titleCont = task.getName().substring(1);
+        var assigneeId = task.getAssignee().getId();
+        var status = task.getTaskStatus().getSlug();
+        var labelId = task.getLabels().stream().map(Label::getId).toList().get(0);
+
+        var url = String.join("",
+            "/api/tasks?titleCont=" + titleCont,
+            "&assigneeId=" + assigneeId,
+            "&status=" + status,
+            "&labelId=" + labelId
+        );
+
+        var request = get(url).with(token);
+
+        var result = mockMvc.perform(request)
+            .andExpect(status().isOk())
+            .andReturn();
+
+        var body = result.getResponse().getContentAsString();
+
+        assertThatJson(body)
+            .isArray()
+            .allSatisfy(element -> assertThatJson(element)
+                .and(v -> v.node("title").asString().containsIgnoringCase(titleCont))
+                .and(v -> v.node("assignee_id").isEqualTo(assigneeId))
+                .and(v -> v.node("status").isEqualTo(status))
+                .and(v -> v.node("labelIds").isArray().contains(labelId))
+        );
+    }
+
+    @Test
     public void testShow() throws Exception {
         taskRepository.save(task);
         var request = get("/api/tasks/" + task.getId()).with(token);
