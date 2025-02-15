@@ -1,4 +1,4 @@
-package hexlet.code.app.config;
+package hexlet.code.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -14,7 +14,7 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 
-import hexlet.code.app.component.RsaKeyProperties;
+import hexlet.code.component.RsaKeyProperties;
 
 @Configuration
 public class EncodersConfig {

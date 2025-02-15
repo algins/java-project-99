@@ -1,10 +1,10 @@
-package hexlet.code.app.specification;
+package hexlet.code.specification;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
-import hexlet.code.app.dto.TaskParamsDTO;
-import hexlet.code.app.model.Task;
+import hexlet.code.dto.TaskParamsDTO;
+import hexlet.code.model.Task;
 
 @Component
 public class TaskSpecification {

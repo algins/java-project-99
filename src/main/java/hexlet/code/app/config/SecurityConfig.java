@@ -1,4 +1,4 @@
-package hexlet.code.app.config;
+package hexlet.code.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +17,7 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
-import hexlet.code.app.service.CustomUserDetailsService;
+import hexlet.code.service.CustomUserDetailsService;
 
 @Configuration
 @EnableWebSecurity

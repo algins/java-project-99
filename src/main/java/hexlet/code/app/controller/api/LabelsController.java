@@ -1,4 +1,4 @@
-package hexlet.code.app.controller.api;
+package hexlet.code.controller.api;
 
 import java.util.List;
 
@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import hexlet.code.app.dto.LabelCreateDTO;
-import hexlet.code.app.dto.LabelDTO;
-import hexlet.code.app.dto.LabelUpdateDTO;
-import hexlet.code.app.service.LabelService;
+import hexlet.code.dto.LabelCreateDTO;
+import hexlet.code.dto.LabelDTO;
+import hexlet.code.dto.LabelUpdateDTO;
+import hexlet.code.service.LabelService;
 import jakarta.validation.Valid;
 
 @RestController

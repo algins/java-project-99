@@ -1,4 +1,4 @@
-package hexlet.code.app.dto;
+package hexlet.code.dto;
 
 import lombok.Getter;
 import lombok.Setter;

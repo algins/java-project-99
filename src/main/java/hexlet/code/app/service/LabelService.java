@@ -1,17 +1,17 @@
-package hexlet.code.app.service;
+package hexlet.code.service;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import hexlet.code.app.dto.LabelCreateDTO;
-import hexlet.code.app.dto.LabelDTO;
-import hexlet.code.app.dto.LabelUpdateDTO;
-import hexlet.code.app.exception.DuplicateNameException;
-import hexlet.code.app.exception.ResourceNotFoundException;
-import hexlet.code.app.mapper.LabelMapper;
-import hexlet.code.app.repository.LabelRepository;
+import hexlet.code.dto.LabelCreateDTO;
+import hexlet.code.dto.LabelDTO;
+import hexlet.code.dto.LabelUpdateDTO;
+import hexlet.code.exception.DuplicateNameException;
+import hexlet.code.exception.ResourceNotFoundException;
+import hexlet.code.mapper.LabelMapper;
+import hexlet.code.repository.LabelRepository;
 
 @Service
 public class LabelService {

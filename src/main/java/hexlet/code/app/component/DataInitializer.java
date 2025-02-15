@@ -1,4 +1,4 @@
-package hexlet.code.app.component;
+package hexlet.code.component;
 
 import java.util.List;
 import java.util.Map;
@@ -8,12 +8,12 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-import hexlet.code.app.dto.LabelCreateDTO;
-import hexlet.code.app.dto.TaskStatusCreateDTO;
-import hexlet.code.app.dto.UserCreateDTO;
-import hexlet.code.app.service.LabelService;
-import hexlet.code.app.service.TaskStatusService;
-import hexlet.code.app.service.UserService;
+import hexlet.code.dto.LabelCreateDTO;
+import hexlet.code.dto.TaskStatusCreateDTO;
+import hexlet.code.dto.UserCreateDTO;
+import hexlet.code.service.LabelService;
+import hexlet.code.service.TaskStatusService;
+import hexlet.code.service.UserService;
 import lombok.RequiredArgsConstructor;
 
 @Component

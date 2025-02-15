@@ -1,4 +1,4 @@
-package hexlet.code.app.service;
+package hexlet.code.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 
-import hexlet.code.app.repository.UserRepository;
+import hexlet.code.repository.UserRepository;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsManager {

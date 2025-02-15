@@ -1,4 +1,4 @@
-package hexlet.code.app.mapper;
+package hexlet.code.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
@@ -6,10 +6,10 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 
-import hexlet.code.app.dto.LabelCreateDTO;
-import hexlet.code.app.dto.LabelDTO;
-import hexlet.code.app.dto.LabelUpdateDTO;
-import hexlet.code.app.model.Label;
+import hexlet.code.dto.LabelCreateDTO;
+import hexlet.code.dto.LabelDTO;
+import hexlet.code.dto.LabelUpdateDTO;
+import hexlet.code.model.Label;
 
 @Mapper(
     uses = {JsonNullableMapper.class, ReferenceMapper.class},

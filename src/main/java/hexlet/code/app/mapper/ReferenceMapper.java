@@ -1,11 +1,11 @@
-package hexlet.code.app.mapper;
+package hexlet.code.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.TargetType;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import hexlet.code.app.model.BaseEntity;
+import hexlet.code.model.BaseEntity;
 import jakarta.persistence.EntityManager;
 
 @Mapper(

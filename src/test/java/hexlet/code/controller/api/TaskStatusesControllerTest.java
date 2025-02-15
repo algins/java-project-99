@@ -1,4 +1,4 @@
-package hexlet.code.app.controller.api;
+package hexlet.code.controller.api;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,10 +28,10 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import hexlet.code.app.model.TaskStatus;
-import hexlet.code.app.model.User;
-import hexlet.code.app.repository.TaskStatusRepository;
-import hexlet.code.app.util.ModelGenerator;
+import hexlet.code.model.TaskStatus;
+import hexlet.code.model.User;
+import hexlet.code.repository.TaskStatusRepository;
+import hexlet.code.util.ModelGenerator;
 import jakarta.transaction.Transactional;
 
 @SpringBootTest

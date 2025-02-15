@@ -1,4 +1,4 @@
-package hexlet.code.app.mapper;
+package hexlet.code.mapper;
 
 import org.mapstruct.Condition;
 import org.mapstruct.Mapper;
