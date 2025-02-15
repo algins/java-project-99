@@ -37,17 +37,17 @@ public abstract class TaskMapper {
 
     @Mapping(source = "assigneeId", target = "assignee")
     @Mapping(source = "status", target = "taskStatus", qualifiedByName = "slugToTaskStatus")
-    @Mapping(source = "labelIds", target = "labels", qualifiedByName = "labelIdsToLabels")
+    @Mapping(source = "taskLabelIds", target = "labels", qualifiedByName = "taskLabelIdsToLabels")
     public abstract Task map(TaskCreateDTO dto);
 
     @Mapping(source = "assignee.id", target = "assigneeId")
     @Mapping(source = "taskStatus.slug", target = "status")
-    @Mapping(source = "labels", target = "labelIds", qualifiedByName = "labelsToLabelIds")
+    @Mapping(source = "labels", target = "taskLabelIds", qualifiedByName = "labelsTotaskLabelIds")
     public abstract TaskDTO map(Task model);
 
     @Mapping(source = "assigneeId", target = "assignee.id")
     @Mapping(source = "status", target = "taskStatus.slug")
-    @Mapping(source = "labelIds", target = "labels", qualifiedByName = "labelIdsToLabels")
+    @Mapping(source = "taskLabelIds", target = "labels", qualifiedByName = "taskLabelIdsToLabels")
     public abstract void update(TaskUpdateDTO dto, @MappingTarget Task model);
 
     @Named("slugToTaskStatus")
@@ -56,16 +56,16 @@ public abstract class TaskMapper {
             .orElseThrow(() -> new ResourceNotFoundException("Not Found: " + slug));
     }
 
-    @Named("labelIdsToLabels")
-    public List<Label> labelIdsToLabels(List<Long> labelIds) {
-        return labelIds.stream()
+    @Named("taskLabelIdsToLabels")
+    public List<Label> taskLabelIdsToLabels(List<Long> taskLabelIds) {
+        return taskLabelIds.stream()
             .map(id -> labelRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Not found: " + id)))
             .toList();
     }
 
-    @Named("labelsToLabelIds")
-    public List<Long> labelsToLabelIds(List<Label> labels) {
+    @Named("labelsTotaskLabelIds")
+    public List<Long> labelsTotaskLabelIds(List<Label> labels) {
         return labels.stream()
             .map(Label::getId)
             .toList();
