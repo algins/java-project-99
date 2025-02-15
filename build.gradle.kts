@@ -12,7 +12,7 @@ plugins {
     id("io.sentry.jvm.gradle") version "5.2.0"
 }
 
-group = "hexlet.code"
+group = "hexlet.code.app"
 version = "0.0.1-SNAPSHOT"
 
 application { mainClass.set("hexlet.code.app.AppApplication") }
