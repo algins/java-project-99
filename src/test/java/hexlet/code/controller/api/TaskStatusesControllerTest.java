@@ -183,7 +183,8 @@ public class TaskStatusesControllerTest {
         taskStatusRepository.save(taskStatus);
 
         var data = Map.of(
-            "name", "newStatus"
+            "name", "newStatus",
+            "slug", "new_status"
         );
 
         var request = put("/api/task_statuses/" + taskStatus.getId())
@@ -198,6 +199,7 @@ public class TaskStatusesControllerTest {
         var updatedTaskStatus = taskStatusRepository.findById(taskStatus.getId()).get();
 
         assertThat(data.get("name")).isEqualTo(updatedTaskStatus.getName());
+        assertThat(data.get("slug")).isEqualTo(updatedTaskStatus.getSlug());
 
         var body = result.getResponse().getContentAsString();
 
@@ -214,6 +216,7 @@ public class TaskStatusesControllerTest {
         taskStatusRepository.save(taskStatus);
 
         var data = Map.of(
+            "slug", "new",
             "name", ""
         );
 
@@ -227,6 +230,7 @@ public class TaskStatusesControllerTest {
 
         var updatedTaskStatus = taskStatusRepository.findById(taskStatus.getId()).get();
         assertThat(taskStatus.getName()).isEqualTo(updatedTaskStatus.getName());
+        assertThat(taskStatus.getSlug()).isEqualTo(updatedTaskStatus.getSlug());
     }
 
     @Test
