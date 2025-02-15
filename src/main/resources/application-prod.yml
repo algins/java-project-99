@@ -5,3 +5,6 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+sentry:
+  dsn: https://78a5fe119570eac5811da3a8fad7cce4@o4508822770483200.ingest.de.sentry.io/4508822772318288

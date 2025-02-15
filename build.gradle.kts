@@ -9,6 +9,7 @@ plugins {
     id("org.springframework.boot") version "3.3.1"
     id("io.spring.dependency-management") version "1.1.5"
     id("com.github.ben-manes.versions") version "0.51.0"
+    id "io.sentry.jvm.gradle" version "5.2.0"
 }
 
 group = "hexlet.code"
@@ -44,6 +45,13 @@ dependencies {
     testImplementation(platform("org.junit:junit-bom:5.11.0-M2"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.11.0-M2")
 
+}
+
+sentry {
+  includeSourceContext = true
+  org = "algins"
+  projectName = "java-spring-boot"
+  authToken = System.getenv("SENTRY_AUTH_TOKEN")
 }
 
 tasks.test {
