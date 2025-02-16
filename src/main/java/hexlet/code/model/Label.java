@@ -37,7 +37,7 @@ public class Label implements BaseEntity {
     @Column(unique = true)
     private String name;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "labels")
     private List<Task> tasks = new ArrayList<>();
 
     @CreatedDate
