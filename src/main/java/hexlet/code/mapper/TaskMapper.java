@@ -58,7 +58,7 @@ public abstract class TaskMapper {
 
     @Named("labelIdsToLabels")
     public List<Label> labelIdsToLabels(List<Long> labelIds) {
-        return labelIds.stream()
+        return labelIds == null ? null : labelIds.stream()
             .map(id -> labelRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Not found: " + id)))
             .toList();
@@ -66,8 +66,8 @@ public abstract class TaskMapper {
 
     @Named("labelsTolabelIds")
     public List<Long> labelsTolabelIds(List<Label> labels) {
-        return labels == null
-            ? null
-            : labels.stream().map(Label::getId).toList();
+        return labels == null ? null : labels.stream()
+            .map(Label::getId)
+            .toList();
     }
 }
