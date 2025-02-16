@@ -103,7 +103,7 @@ public class TasksControllerTest {
             v.node("[0].title").isEqualTo(task.getName());
             v.node("[0].content").isEqualTo(task.getDescription());
             v.node("[0].status").isEqualTo(task.getTaskStatus().getSlug());
-            v.node("[0].labelIds").isEqualTo(task.getLabels().stream().map(Label::getId).toList());
+            v.node("[0].taskLabelIds").isEqualTo(task.getLabels().stream().map(Label::getId).toList());
         });
     }
 
@@ -136,7 +136,7 @@ public class TasksControllerTest {
                 .and(v -> v.node("title").asString().containsIgnoringCase(titleCont))
                 .and(v -> v.node("assignee_id").isEqualTo(assigneeId))
                 .and(v -> v.node("status").isEqualTo(status))
-                .and(v -> v.node("labelIds").isArray().contains(labelId))
+                .and(v -> v.node("taskLabelIds").isArray().contains(labelId))
         );
     }
 
@@ -159,7 +159,7 @@ public class TasksControllerTest {
             v.node("title").isEqualTo(task.getName());
             v.node("content").isEqualTo(task.getDescription());
             v.node("status").isEqualTo(task.getTaskStatus().getSlug());
-            v.node("labelIds").isEqualTo(task.getLabels().stream().map(Label::getId).toList());
+            v.node("taskLabelIds").isEqualTo(task.getLabels().stream().map(Label::getId).toList());
         });
     }
 
@@ -171,7 +171,7 @@ public class TasksControllerTest {
             "title", task.getName(),
             "content", task.getDescription(),
             "status", task.getTaskStatus().getSlug(),
-            "labelIds", task.getLabels().stream().map(Label::getId).toList()
+            "taskLabelIds", task.getLabels().stream().map(Label::getId).toList()
         );
 
         var request = post("/api/tasks")
@@ -190,7 +190,7 @@ public class TasksControllerTest {
         assertThat(data.get("title")).isEqualTo(createdTask.getName());
         assertThat(data.get("content")).isEqualTo(createdTask.getDescription());
         assertThat(data.get("status")).isEqualTo(createdTask.getTaskStatus().getSlug());
-        assertThat(data.get("labelIds")).isEqualTo(createdTask.getLabels().stream().map(Label::getId).toList());
+        assertThat(data.get("taskLabelIds")).isEqualTo(createdTask.getLabels().stream().map(Label::getId).toList());
 
         var body = result.getResponse().getContentAsString();
 
@@ -202,7 +202,7 @@ public class TasksControllerTest {
             v.node("title").isEqualTo(createdTask.getName());
             v.node("content").isEqualTo(createdTask.getDescription());
             v.node("status").isEqualTo(createdTask.getTaskStatus().getSlug());
-            v.node("labelIds").isEqualTo(createdTask.getLabels().stream().map(Label::getId).toList());
+            v.node("taskLabelIds").isEqualTo(createdTask.getLabels().stream().map(Label::getId).toList());
         });
     }
 
@@ -241,7 +241,7 @@ public class TasksControllerTest {
             "title", "Test title",
             "content", "Test content",
             "status", newTaskStatus.getSlug(),
-            "labelIds", List.of(newLabel.getId())
+            "taskLabelIds", List.of(newLabel.getId())
         );
 
         var request = put("/api/tasks/" + task.getId())
@@ -260,7 +260,7 @@ public class TasksControllerTest {
         assertThat(data.get("title")).isEqualTo(updatedTask.getName());
         assertThat(data.get("content")).isEqualTo(updatedTask.getDescription());
         assertThat(data.get("status")).isEqualTo(updatedTask.getTaskStatus().getSlug());
-        assertThat(data.get("labelIds")).isEqualTo(updatedTask.getLabels().stream().map(Label::getId).toList());
+        assertThat(data.get("taskLabelIds")).isEqualTo(updatedTask.getLabels().stream().map(Label::getId).toList());
 
         var body = result.getResponse().getContentAsString();
 
@@ -272,7 +272,7 @@ public class TasksControllerTest {
             v.node("title").isEqualTo(updatedTask.getName());
             v.node("content").isEqualTo(updatedTask.getDescription());
             v.node("status").isEqualTo(updatedTask.getTaskStatus().getSlug());
-            v.node("labelIds").isEqualTo(updatedTask.getLabels().stream().map(Label::getId).toList());
+            v.node("taskLabelIds").isEqualTo(updatedTask.getLabels().stream().map(Label::getId).toList());
         });
     }
 
