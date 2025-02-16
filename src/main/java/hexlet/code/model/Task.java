@@ -11,7 +11,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
@@ -35,7 +34,7 @@ public class Task implements BaseEntity {
 
     private Integer index;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private User assignee;
 
     @NotBlank

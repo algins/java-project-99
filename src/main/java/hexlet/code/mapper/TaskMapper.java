@@ -18,8 +18,10 @@ import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.model.Label;
 import hexlet.code.model.Task;
 import hexlet.code.model.TaskStatus;
+import hexlet.code.model.User;
 import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.TaskStatusRepository;
+import hexlet.code.repository.UserRepository;
 
 @Mapper(
     uses = {JsonNullableMapper.class, ReferenceMapper.class},
@@ -30,12 +32,15 @@ import hexlet.code.repository.TaskStatusRepository;
 public abstract class TaskMapper {
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private TaskStatusRepository taskStatusRepository;
 
     @Autowired
     private LabelRepository labelRepository;
 
-    @Mapping(source = "assigneeId", target = "assignee")
+    @Mapping(source = "assigneeId", target = "assignee", qualifiedByName = "assigneeIdToAssignee")
     @Mapping(source = "status", target = "taskStatus", qualifiedByName = "slugToTaskStatus")
     @Mapping(source = "taskLabelIds", target = "labels", qualifiedByName = "taskLabelIdsToLabels")
     public abstract Task map(TaskCreateDTO dto);
@@ -45,10 +50,16 @@ public abstract class TaskMapper {
     @Mapping(source = "labels", target = "taskLabelIds", qualifiedByName = "labelsTotaskLabelIds")
     public abstract TaskDTO map(Task model);
 
-    @Mapping(source = "assigneeId", target = "assignee.id")
+    @Mapping(source = "assigneeId", target = "assignee", qualifiedByName = "assigneeIdToAssignee")
     @Mapping(source = "status", target = "taskStatus.slug")
     @Mapping(source = "taskLabelIds", target = "labels", qualifiedByName = "taskLabelIdsToLabels")
     public abstract void update(TaskUpdateDTO dto, @MappingTarget Task model);
+
+    @Named("assigneeIdToAssignee")
+    public User assigneeIdToAssigne(Long assigneeId) {
+        return userRepository.findById(assigneeId)
+            .orElseThrow(() -> new ResourceNotFoundException("Not Found: " + assigneeId));
+    }
 
     @Named("slugToTaskStatus")
     public TaskStatus slugToTaskStatus(String slug) {
